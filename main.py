@@ -15,3 +15,19 @@ from nsepython import *
 # print(nse_eq("TCS")['priceInfo']['close'])
 
 print(nse_results())
+
+
+# # Fetches holdings
+# print(client.holdings())
+
+# # Fetches margin
+# client.margin()
+
+# # Fetches positions
+# client.positions()
+
+# # Fetches the order book of the client
+# client.order_book()
+
+# # Fetches Trade book
+# client.get_tradebook()

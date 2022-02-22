@@ -76,6 +76,7 @@ previous_day_low = market_depth['Data'][0]['Low']
 
 print('Your API fetching took', time.time() - t1, 's to execute')
 
+# Live Feed
 req_list_for_live_feed = [
             { 
                 "Exch":"N",
