@@ -76,4 +76,18 @@ previous_day_low = market_depth['Data'][0]['Low']
 
 print('Your API fetching took', time.time() - t1, 's to execute')
 
-# Opening 10 mins Range
+req_list_for_live_feed = [
+            { 
+                "Exch":"N",
+                "ExchType":"C",
+                "ScripCode":scripcode
+            },            
+]
+
+dict = client.Request_Feed('mf', 's', req_list_for_live_feed)
+# client.Streming_data(dict)
+def on_message(ws, message):
+    print(message)
+
+client.connect(dict)
+client.receive_data(on_message)
