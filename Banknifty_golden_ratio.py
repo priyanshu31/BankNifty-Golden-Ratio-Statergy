@@ -1,7 +1,11 @@
 from asyncio.windows_events import NULL
 from cgi import print_environ
+from hmac import new
+from operator import ne
+from pprint import pprint
 from telnetlib import AUTHENTICATION
 from tkinter.tix import Tree
+from turtle import back
 from click import confirmation_option
 from jinja2 import Undefined
 from nsepython import *
@@ -12,6 +16,7 @@ import time
 import json
 import os
 from datetime import date, datetime
+import csv
 
 t1 = time.time()
 
@@ -48,7 +53,7 @@ t1 = time.time()
 json_scripcode_file = open('./ScripCodes/new-scripcode-json.json')
 json_scripcode_data = json.load(json_scripcode_file)
 
-stock_name = 'NIFTY'
+stock_name = 'BANKNIFTY'
 scripcode = json_scripcode_data[stock_name]['Scripcode']
 
 # scripcode loading #
@@ -98,17 +103,51 @@ dict = client.Request_Feed('mf', 's', req_list_for_live_feed)
 first_10_mins_high = Undefined
 first_10_mins_low = NULL
 
-trade_taken = False
+trade_taken = True
 trade = {}
+
+# Backtest Data File CSV 
+backtest_data_file = open(f'./Golden_Ratio_Backtest/{stock_name}_Intraday_Backtest_Results_Golden_Ratio.csv')
+backtest_data = csv.DictReader(backtest_data_file)
+
+new_backtest_data = []
+for row in backtest_data:
+    new_backtest_data.append(row)
 
 def on_message(ws, message):
     
     # print(message)
     now = datetime.now()
     json_data = json.loads(message)
-    print(json_data)
+    print(now.hour)
     
-    if (now.hour >= 15 and now.minute >= 20):
+    if now.hour > 15 or now.hour < 9 or (now.hour == 15 and now.minute >= 20) or (now.hour == 9 and now.minute <= 15):
+        
+        print("hi")
+        if trade_taken:
+            trade['exit_price'] = json_data[0]['PClose']
+            trade['pnl'] = trade['exit_price'] - trade['entry_price']
+            trade['success'] = trade['pnl'] > 0
+            trade['trade_exit_time'] = datetime.now()
+            trade_taken = False
+            new_backtest_data.append(trade)
+        
+        backtest_data_file = open(f'./Golden_Ratio_Backtest/{stock_name}_Intraday_Backtest_Results_Golden_Ratio.csv', 'w', newline='')
+        data_list = csv.DictWriter(backtest_data_file, fieldnames = [
+            'trade_time', 
+            'entry_price', 
+            'stop_loss', 
+            'target', 
+            'exit_price', 
+            'trade_exit_time', 
+            'trade_type', 
+            'pnl', 
+            'success', 
+            'pnl',
+        ])
+    
+        data_list.writeheader()
+        data_list.writerows(new_backtest_data)
         sys.exit()
         
     if (not flag_first_10_min) and now.hour == 9 and now.minute == 26:
@@ -122,13 +161,17 @@ def on_message(ws, message):
                     trade['exit_price'] = json_data[0]['PClose']
                     trade['pnl'] = trade['exit_price'] - trade['entry_price']
                     trade['success'] = trade['pnl'] > 0
+                    trade['trade_exit_time'] = datetime.now()
                     trade_taken = False
+                    new_backtest_data.append(trade)
                                         
             elif trade['trade_type'] == 'short' and (trade['stop_loss'] <= json_data[0]['PClose'] or trade['target'] >= json_data[0]['PClose']):
                     trade['exit_price'] = json_data[0]['PClose']
                     trade['pnl'] = trade['exit_price'] - trade['entry_price']
                     trade['success'] = trade['pnl'] > 0
+                    trade['trade_exit_time'] = datetime.now()
                     trade_taken = False
+                    new_backtest_data.append(trade)
             
         else:
             if json_data[0]['PClose'] > first_10_mins_high:
