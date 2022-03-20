@@ -1,11 +1,7 @@
-from asyncio.windows_events import NULL
-from telnetlib import AUTHENTICATION
-from nsepython import *
 from decouple import config
 from py5paisa import FivePaisaClient
 import time
 import json
-import os
 from datetime import date, datetime
 import csv
 
@@ -91,8 +87,8 @@ req_list_for_live_feed = [
 flag_first_10_min = False
 # first_10_mins = datetime.time(9, 26, 0)
 dict = client.Request_Feed('mf', 's', req_list_for_live_feed)
-first_10_mins_high = NULL
-first_10_mins_low = NULL
+first_10_mins_high = None
+first_10_mins_low = None
 
 trade_taken = True
 trade = {}
