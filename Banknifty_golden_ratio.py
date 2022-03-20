@@ -1,17 +1,8 @@
 from asyncio.windows_events import NULL
-from cgi import print_environ
-from hmac import new
-from operator import ne
-from pprint import pprint
 from telnetlib import AUTHENTICATION
-from tkinter.tix import Tree
-from turtle import back
-from click import confirmation_option
-from jinja2 import Undefined
 from nsepython import *
 from decouple import config
 from py5paisa import FivePaisaClient
-import pandas
 import time
 import json
 import os
@@ -100,7 +91,7 @@ req_list_for_live_feed = [
 flag_first_10_min = False
 # first_10_mins = datetime.time(9, 26, 0)
 dict = client.Request_Feed('mf', 's', req_list_for_live_feed)
-first_10_mins_high = Undefined
+first_10_mins_high = NULL
 first_10_mins_low = NULL
 
 trade_taken = True
@@ -116,14 +107,14 @@ for row in backtest_data:
 
 def on_message(ws, message):
     
-    # print(message)
+    print(message)
     now = datetime.now()
     json_data = json.loads(message)
-    print(now.hour)
+    # print(now.hour)
     
     if now.hour > 15 or now.hour < 9 or (now.hour == 15 and now.minute >= 20) or (now.hour == 9 and now.minute <= 15):
         
-        print("hi")
+        # print("hi")
         if trade_taken:
             trade['exit_price'] = json_data[0]['PClose']
             trade['pnl'] = trade['exit_price'] - trade['entry_price']
