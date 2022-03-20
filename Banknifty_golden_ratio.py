@@ -135,7 +135,7 @@ def on_message(ws, message):
     
         data_list.writeheader()
         data_list.writerows(new_backtest_data)
-        sys.exit()
+        # sys.exit()
         
     if (not flag_first_10_min) and now.hour == 9 and now.minute == 26:
         flag_first_10_min = True
