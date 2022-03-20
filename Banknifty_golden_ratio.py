@@ -67,10 +67,12 @@ req_list = [
 
 market_depth = client.fetch_market_depth(req_list)
 print(market_depth)
-previous_day_close = market_depth['Data'][0]['Close']
-previous_day_high = market_depth['Data'][0]['High']
-previous_day_low = market_depth['Data'][0]['Low']
-# print(previous_day_high, previous_day_low)
+
+if market_depth: 
+    previous_day_close = market_depth['Data'][0]['Close']
+    previous_day_high = market_depth['Data'][0]['High']
+    previous_day_low = market_depth['Data'][0]['Low']
+    # print(previous_day_high, previous_day_low)
 
 print('Your API fetching took', time.time() - t1, 's to execute')
 
