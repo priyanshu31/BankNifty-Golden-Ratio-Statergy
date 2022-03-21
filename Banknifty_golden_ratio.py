@@ -66,7 +66,7 @@ req_list = [
 # Previous Day's Low
 
 market_depth = client.fetch_market_depth(req_list)
-print(market_depth)
+# print(market_depth)
 
 if market_depth: 
     previous_day_close = market_depth['Data'][0]['Close']
@@ -105,6 +105,7 @@ for row in backtest_data:
 
 def on_message(ws, message):
     
+    # print("hi")
     print(message)
     now = datetime.now()
     json_data = json.loads(message)
@@ -112,7 +113,6 @@ def on_message(ws, message):
     
     if now.hour > 15 or now.hour < 9 or (now.hour == 15 and now.minute >= 20) or (now.hour == 9 and now.minute <= 15):
         
-        # print("hi")
         if trade_taken:
             trade['exit_price'] = json_data[0]['PClose']
             trade['pnl'] = trade['exit_price'] - trade['entry_price']
