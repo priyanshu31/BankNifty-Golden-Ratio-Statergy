@@ -109,7 +109,7 @@ def on_message(ws, message):
     print(message)
     now = datetime.now()
     json_data = json.loads(message)
-    # print(now.hour)
+    print(now.hour)
     
     if now.hour > 15 or now.hour < 9 or (now.hour == 15 and now.minute >= 20) or (now.hour == 9 and now.minute <= 15):
         
